@@ -3,6 +3,7 @@ import inflection
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+seed = 42
 
 def loading_data(df):
     """
@@ -41,20 +42,13 @@ def feature_engineering(df):
 
     """
 
-    # Split data
-    X = df.drop(columns=['exited', 'customer_id'])
-    y = df['exited']
-    ids = df['customer_id']
 
-    # Train -> 80%
-    # Test -> 20%
-    X_train, X_test, y_train, y_test, id_train, id_test = train_test_split(X, y, ids, test_size = 0.2, random_state = seed, stratify = y)
 
-    for dataframe in [X_train, X_test]:
+
 
 
 
 cols_drop = ['estimated_salary_per_country', 'tenure_per_country', 'credit_score_per_gender', '_has_cr_card']
 
-X_train, X_test, X_val = [dataframe.drop(columns = cols_drop) for dataframe in [X_train, X_test, X_val]]
+
 
