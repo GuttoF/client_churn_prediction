@@ -26,6 +26,7 @@ catboost = "^1.2.2"
 kds = "^0.1.3"
 optuna = "^3.4.0"
 nbformat = "^5.9.2"
+streamlit = "^1.28.2"
 
 
 [build-system]
