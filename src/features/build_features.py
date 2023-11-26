@@ -1,70 +1,42 @@
-import pickle
-from typing                             import Union
-from sklearn.pipeline                   import Pipeline
-from sklearn.preprocessing              import LabelEncoder
-from sklearn.compose                    import ColumnTransformer
+import pandas as pd
+from typing import Union
 
-def pipeline_churn(dataframe: Union[int, float, str], min_max_scaler: list, mms: str, robust_scaler: list, rs: str, standard_scaler: list, ss: str, cols_ohe: list, ohe: str, cols_le: list, homepath: str, save_scalers: bool = True, scalers_filename: str = 'scalers.pkl'):
+
+
+def build_features(X_train: Union[int, float, str], X_test: Union[int, float, str], y_train: Union[int, float, str], y_test: Union[int, float, str], id_train: Union[int, float, str], id_test: Union[int, float, str]):
     """
-    This function takes a Pandas DataFrame as input, along with three lists of column names (`min_max_scaler`, `robust_scaler`, `standard_scaler` `cols_ohe` and `cols_le`). The function applies a series of transformations to the input DataFrame, including one-hot encoding, label encoding, min-max scaling, standard scaling and robust scaling.
-
-    Args:
-        dataframe (Union[int, float, str]): Dataframe with all features
-        min_max_scaler (list): List of Features to apply mms
-        robust_scaler (list): List of Features to apply rs
-        standard_scaler (list): List of Features to apply ss
-        cols_ohe (list): List of Features to apply ohe
-        cols_le (list): List of Features to apply le
-        homepath (str): Path to save the scalers
-        save_scaler (bool): Save scalers to a pickle file
-        scalers_filename (str): Name of the pickle file
-
-    Returns:
-        dataframe: dataframe with transformations
+    Build features for the model.
+    input: [X_train, X_test, y_train, y_test, id_train, id_test, X_val, y_val] - dataframes
+    return: [X_train, X_test, y_train, y_test, id_train, id_test, X_val, y_val] - dataframes with modifications
     """
 
-    le_dict = {}
-    for col in cols_le:
-        le_dict[col] = LabelEncoder()
-        dataframe[col] = le_dict[col].fit_transform(dataframe[col])
+    for dataframe in [X_train, X_test]:
+        # balance_salary_ratio
+        dataframe['balance_salary_ratio'] = dataframe['balance']/dataframe['estimated_salary']
+        # credit_score_age_ratio
+        dataframe['credit_score_age_ratio'] = dataframe['credit_score']/dataframe['age']
+        # tenure_age_ratio
+        dataframe['tenure_age_ratio'] = dataframe['tenure']/dataframe['age']
+        # life_stage
+        dataframe['life_stage'] = dataframe['age'].apply(lambda x: 'adolescence' if x <= 20 else 'adulthood' if (
+            x > 20) & (x <= 35) else 'middle_age' if (x > 35) & (x <= 50) else 'senior')
 
-    # column transformer
-    column_transformer = ColumnTransformer(
-        transformers = [('mms', mms, min_max_scaler),
-                        ('rs', rs, robust_scaler),
-                        ('ss', ss, standard_scaler),
-                        ('ohe', ohe, cols_ohe)], remainder = 'passthrough')
+    # balance_age
+    balance_age_train, balance_age_test, balance_age_val = [dataframe.loc[:, ['age', 'balance']].groupby('age').mean().reset_index() for dataframe in [X_train, X_test]]
 
-    # pipeline
-    pipeline = Pipeline([('column_transform', column_transformer)])
-    dataframe = pipeline.fit_transform(dataframe)
+    balance_age_train.columns = ['age', 'balance_per_age']
+    balance_age_test.columns = ['age', 'balance_per_age']
 
-    # Get column name
-    column_names = column_transformer.get_feature_names_out()
+    X_train = pd.merge(X_train, balance_age_train, on = 'age', how = 'left')
+    X_test = pd.merge(X_test, balance_age_test, on = 'age', how = 'left')
 
-    # Get dataframe back
-    dataframe = pd.DataFrame(dataframe, columns = column_names)
-    dataframe = dataframe.rename(columns = lambda x: x.replace('remainder_', ''))
-    dataframe = dataframe.rename(columns = lambda x: x.replace('mms__', ''))
-    dataframe = dataframe.rename(columns = lambda x: x.replace('rs__', ''))
-    dataframe = dataframe.rename(columns = lambda x: x.replace('ss__', ''))
-    dataframe = dataframe.rename(columns = lambda x: x.replace('ohe__', ''))
-    dataframe = dataframe.rename(columns = lambda x: x.replace('le__', ''))
+    # LTV
+    balance_tenure_train, balance_tenure_test = [dataframe.loc[:, ['tenure', 'balance']].groupby('tenure').mean().reset_index() for dataframe in [X_train, X_test]]
 
-    # Store scalers objects
-    global mms_scaler, rs_scaler, ss_scaler
-    mms_scaler = column_transformer.named_transformers_['mms']
-    rs_scaler = column_transformer.named_transformers_['rs']
-    ss_scaler = column_transformer.named_transformers_['ss']
+    balance_tenure_train.columns = ['tenure', 'ltv']
+    balance_tenure_test.columns = ['tenure', 'ltv']
 
-    # Store encoders objects
-    global ohe_encoderm, le_encoder
-    ohe_encoder = column_transformer.named_transformers_['ohe']
-    le_encoder = le_dict
+    X_train = pd.merge(X_train, balance_tenure_train, on = 'tenure', how = 'left')
+    X_test = pd.merge(X_test, balance_tenure_test, on = 'tenure', how = 'left')
 
-    # Save scalers to a pickle file
-    if save_scalers == True:
-        with open(homepath + scalers_filename, 'wb'):
-                  pickle.dump({'mms_scaler': mms_scaler, 'rs_scaler': rs_scaler, 'ss_scaler': ss_scaler, 'ohe_encoder': ohe_encoder, 'le_encoder': le_encoder}, open(homepath + scalers_filename, 'wb'))
-    
-    return dataframe
+    return X_train, X_test, y_train, y_test, id_train, id_test
