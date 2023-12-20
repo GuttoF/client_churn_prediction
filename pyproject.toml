@@ -28,6 +28,10 @@ streamlit = "^1.29.0"
 plotly = "^5.18.0"
 fastapi = "^0.105.0"
 uvicorn = "^0.24.0.post1"
+sqlalchemy = "^2.0.23"
+duckdb-engine = "^0.9.4"
+watchdog = "^3.0.0"
+flask = "^3.0.0"
 
 
 [build-system]

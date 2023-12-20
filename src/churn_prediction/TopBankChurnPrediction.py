@@ -117,15 +117,15 @@ class TopBankChurnPrediction(object):
         return processed_data
 
 
-def predict(self, model, input_data):
-    """
-    Make predictions using a trained model.
-    input: [model] - model object
-            [input_data] - data to make predictions
-    return: [predictions] - predictions
-    """
-    threshold = self.threshold
-    probability = model.predict_proba(input_data)[:, 1]
-    predictions = (probability >= threshold).astype(int)
-
-    return predictions
+    def predict(self, model, input_data):
+        """
+        Make predictions using a trained model.
+        input: [model] - model object
+                [input_data] - data to make predictions
+        return: [predictions] - predictions
+        """
+        threshold = self.threshold
+        probability = model.predict_proba(input_data)[:, 1]
+        predictions = (probability >= threshold).astype(int)
+    
+        return predictions
