@@ -1,7 +1,7 @@
 import pickle
 import duckdb
 
-homepath = '/client_churn_prediction/'
+homepath = '/client_churn_prediction/src'
 with open(homepath + 'data/processed/X_test.pkl', 'rb') as df:
     X_test = pickle.load(df)
 
