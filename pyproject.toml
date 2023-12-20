@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9.10"
 lightgbm = "^4.1.0"
 xgboost = "^2.0.2"
 catboost = "^1.2.2"
