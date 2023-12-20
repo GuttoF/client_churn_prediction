@@ -187,7 +187,7 @@ def knapsack_solver(scenario_name: str, data: Union[str, int, float], prediction
     return dataframe
 
 # Load data
-homepath = '/Users/guttofranca/Repos/client_churn_prediction/'
+homepath = 'client_churn_prediction/'
 
 X_data = pd.read_pickle(homepath + 'data/processed/X_data.pkl')
 y_data = pd.read_pickle(homepath + 'data/processed/y_data.pkl')

@@ -8,7 +8,7 @@ from sklearn.preprocessing import MinMaxScaler, RobustScaler, OneHotEncoder, Fun
 
 class TopBankChurnPrediction(object):
     def __init__(self):
-        self.homepath = '/Users/guttofranca/Repos/client_churn_prediction/src/model/'
+        self.homepath = 'client_churn_prediction/src/model/'
         #self.homepath = 'model/'
         self.threshold = pickle.load(open(self.homepath + '/threshold.pkl', 'rb'))
 
