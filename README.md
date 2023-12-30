@@ -12,7 +12,6 @@
 - [9. Streamlit Churn Prediction App](#9-streamlit-churn-prediction-app)
 - [10. Lessons Learned](#10-lessons-learned)
 - [11. Next Steps](#11-next-steps)
-- [Conclusion](#conclusion)
 
 ---
 ## 1. Business Problem
