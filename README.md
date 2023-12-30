@@ -271,8 +271,3 @@ This application combines the power of the knapsack problem and a machine learni
 - Test other simulation with other budgets in order to search better scenarios.
 - Train other models in search to better results in precision, recall and F1-Score.
 - If can get more data, experiment data balance for a better performance.
-
-## Conclusion
-
-This project was developed in order to meet the TopBank's business challenge of churn prediction and to determine which clients should be contacted in order not to leave the bank and hence reduce the churn ratio.
-The solution was built with a combination of machine learning algorithms that modelled the phenomenon and predicted the churn, as well as with an optimization algorithm based on the 0-1 Knapsack Problem to select the clients to receive a financial incentive not to leave the bank that maximizes the revenue for the bank. This solution delivers a model that has a precision of 75.4%, recovers 32.72% of total revenue loss, enables a profit of $2191386.62 and a ROI of 21913.87%.
