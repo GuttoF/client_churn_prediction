@@ -187,20 +187,18 @@ def knapsack_solver(scenario_name: str, data: Union[str, int, float], prediction
     return dataframe
 
 # Load data
-homepath = 'src/'
+X_data = pd.read_pickle('data/X_data.pkl')
+y_data = pd.read_pickle('data/y_data.pkl')
+df2 = pd.read_pickle('data/df2.pkl')
+X_test = pd.read_pickle('data/X_test.pkl')
+y_test = pd.read_pickle('data/y_test.pkl')
 
-X_data = pd.read_pickle(homepath + 'data/processed/X_data.pkl')
-y_data = pd.read_pickle(homepath + 'data/processed/y_data.pkl')
-df2 = pd.read_pickle(homepath + 'data/processed/df2.pkl')
-X_test = pd.read_pickle(homepath + 'data/processed/X_test.pkl')
-y_test = pd.read_pickle(homepath + 'data/processed/y_test.pkl')
-
-estimated_salary = pd.read_pickle(homepath + 'data/processed/estimated_salary.pkl')
+estimated_salary = pd.read_pickle('data/processed/estimated_salary.pkl')
 
 # Load model and threshold
 model = CatBoostClassifier()
-model.load_model(homepath + 'models/model.cbm')
-threshold = pickle.load(open(homepath + 'models/threshold.pkl', 'rb'))
+model.load_model('models/model.cbm')
+threshold = pickle.load(open('models/threshold.pkl', 'rb'))
 yhat_proba = model.predict_proba(X_test)[: , 1]
 yhat = (yhat_proba >= threshold).astype(int)
 
