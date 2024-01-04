@@ -259,10 +259,7 @@ This application combines the power of the knapsack problem and a machine learni
 
 ## 10. Lessons Learned
 
-- Sometimes, new features may not help to improve performance.
-- Artificially balanced models may have a lower performance on the test set.
-- Accuracy alone may not be enough.
-- The Lift and Cumulative Gains Curve are metrics to compare models' performance and can be used to prioritize clients to be contacted.
+- Sometimes, new features may not help to improve performance
 - The Knapsach-problem 0-1 can be applied in other context, such this churn prediction.
 
 ## 11. Next Steps
